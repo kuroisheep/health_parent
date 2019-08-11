@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/mvc
@@ -11,11 +11,32 @@
 						http://code.alibabatech.com/schema/dubbo
 						http://code.alibabatech.com/schema/dubbo/dubbo.xsd
 						http://www.springframework.org/schema/context
-						http://www.springframework.org/schema/context/spring-context.xsd">
+						http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--注册任务类-->
     <context:component-scan base-package="com.itheima.jobs"/>
+    <!--开启包扫描-->
+    <context:annotation-config/>
 
+    <!-- 指定应用名称 -->
+    <dubbo:application name="health_jobs" />
+    <!--指定服务注册中心地址-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <!--批量扫描-->
+    <dubbo:annotation package="com.itheima" />
+    <!--
+        超时全局设置 10分钟
+        check=false 不检查服务提供方，开发阶段建议设置为false
+        check=true 启动时检查服务提供方，如果服务提供方没有启动则报错
+    -->
+    <dubbo:consumer timeout="600000" check="false"/>
+    <!--文件上传组件-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="104857600" />
+        <property name="maxInMemorySize" value="4096" />
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
     <!--
     1.注册任务对象
     2.jobDetail注入的属性 哪个任务 哪个方法
@@ -25,28 +46,48 @@
     <!-- 注册自定义Job -->
     <!--<bean id="clearImg" class="com.itheima.jobs.ClearImg"></bean>-->
     <!-- 注册JobDetail,作用是负责通过反射调用指定的Job -->
-    <bean id="jobDetail"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <!-- 注入目标对象 -->
-        <property name="targetObject" ref="clearImg"/>
-        <!-- 注入目标方法 -->
-        <property name="targetMethod" value="deleteImg"/>
-    </bean>
+    <bean id="jobDetail_1"
+                  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <!-- 注入目标对象 -->
+    <property name="targetObject" ref="clearImg"/>
+    <!-- 注入目标方法 -->
+    <property name="targetMethod" value="deleteImg"/>
+</bean>
     <!-- 注册一个触发器，指定任务触发的时间 -->
-    <bean id="myTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <bean id="myTrigger_1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <!-- 注入JobDetail -->
-        <property name="jobDetail" ref="jobDetail"/>
+        <property name="jobDetail" ref="jobDetail_1"/>
         <!-- 指定触发的时间，基于Cron表达式 每隔10秒执行一次任务-->
         <property name="cronExpression">
             <value>0/10 * * * * ?</value>
         </property>
     </bean>
+
+    <bean id="jobDetail_2"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 注入目标对象 -->
+        <property name="targetObject" ref="cronJob"/>
+        <!-- 注入目标方法 -->
+        <property name="targetMethod" value="deleteOrderSetting"/>
+    </bean>
+    <!-- 注册一个触发器，指定任务触发的时间 -->
+    <bean id="myTrigger_2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- 注入JobDetail -->
+        <property name="jobDetail" ref="jobDetail_2"/>
+        <!-- 指定触发的时间，基于Cron表达式 每个月的最后一天的23点59分执行-->
+        <property name="cronExpression">
+            <!--测试 一分钟后执行的Cron表达式：0 */1 * * * ?-->
+            <value>0 59 23 L * ?</value>
+        </property>
+    </bean>
+
     <!-- 注册一个统一的调度工厂，通过这个调度工厂调度任务 -->
     <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <!-- 注入多个触发器 -->
         <property name="triggers">
             <list>
-                <ref bean="myTrigger"/>
+                <ref bean="myTrigger_1"/>
+                <ref bean="myTrigger_2"/>
             </list>
         </property>
     </bean>
