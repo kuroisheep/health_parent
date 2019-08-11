@@ -46,4 +46,7 @@ public interface OrderSettingDao {
      * @param orderSetting
      */
     void editReservationsByOrderDate(OrderSetting orderSetting);
+
+    //删除过期预约设置
+    void deleteOrderSetting(String date);
 }

@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.itheima.dao.OrderSettingDao;
 import com.itheima.pojo.OrderSetting;
 import com.itheima.service.OrderSettingService;
+import com.itheima.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,6 +81,14 @@ public class OrderSettingServiceImpl implements OrderSettingService {
         orderSetting.setOrderDate(orderDate);
         orderSetting.setNumber(number);
         this.orderSettingByOrderDate(orderSetting);
+    }
+
+    //删除过期预约数据
+    @Override
+    public void deleteOrderSetting() throws Exception {
+        String date = DateUtils.parseDate2String(DateUtils.getToday());
+        orderSettingDao.deleteOrderSetting(date);
+        System.out.println("service执行l 。。");
     }
 
 
