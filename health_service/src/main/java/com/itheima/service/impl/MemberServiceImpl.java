@@ -3,7 +3,9 @@ package com.itheima.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.itheima.dao.MemberDao;
 import com.itheima.pojo.Member;
+import com.itheima.pojo.Time;
 import com.itheima.service.MemberService;
+import com.itheima.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,9 +60,35 @@ public class MemberServiceImpl implements MemberService {
         return map;
     }
 
+    /**
+     *description:根据区间时间获取会员折线图数据
+     * @param start, end]
+     * @return java.util.Map
+     */
+    @Override
+    public Map getMemberReportDefined(String start, String end) {
 
-    public static void main(String[] args) {
-
-
+        try {
+            Map<String,Object> map = new HashMap<>();
+            //根据开始时间和结束时间 获取区间月份集合
+            List<String> monthBetween = DateUtils.getMonthBetween(start, end, "yyyy-MM");
+            map.put("months",monthBetween);
+            //会员数量集合
+            List<Integer> memberCounts = new ArrayList<>();
+            if (monthBetween!=null){
+                for (String month : monthBetween) {
+                    //根据每一个月份查会员数量
+                    month+="-31";
+                    Integer memberCount = memberDao.findMemberCountBeforeDate(month);
+                    memberCounts.add(memberCount);
+                }
+            }
+            map.put("memberCount",memberCounts);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 }

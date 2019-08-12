@@ -11,9 +11,49 @@
         <!-- 引入样式 -->
         <link rel="stylesheet" href="../css/style.css">
         <script src="../plugins/echarts/echarts.js"></script>
+        <script src="../js/jquery.min.js"></script>
     </head>
+
+
     <body class="hold-transition">
+
+
+    <!--<div id="biubiu" style="width:1100px;height:30px;text-align:left; padding-top:40px;">
+
+    </div>-->
+    <div id="time" style="width:1100px;height:30px;text-align:left; padding-top:40px;">
+        <!--日历控件-->
+        <template>
+            <div class="block">
+                <span class="demonstration" ></span>
+                <el-date-picker
+                        v-model="value1"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                </el-date-picker>
+                <el-button @click="handleTime(value1)" class="dalfBut">查询</el-button>
+            </div>
+        </template>
+    </div>
+
         <div id="app">
+            <!--日历控件-->
+            <!--<template>
+                <div class="block"  style="width:1100px;height:30px;text-align:left; padding-top:40px;">
+                    <span class="demonstration"></span>
+                    <el-date-picker
+                            v-model="value1"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                    </el-date-picker>
+                    <el-button @click="handleTime()" class="dalfBut">查询</el-button>
+                </div>
+            </template>-->
+
             <div class="content-header">
                 <h1>统计分析<small>会员数量</small></h1>
                 <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
@@ -29,10 +69,16 @@
             </div>
             </div>
         </div>
+
     </body>
     <!-- 引入组件库 -->
     <script src="../js/vue.js"></script>
     <script src="../js/axios-0.18.0.js"></script>
+    <!-- 引入ElementUI样式 -->
+    <link rel="stylesheet" href="../js/index.css">
+    <script src="../js/index.js"></script>
+
+
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myChart1 = echarts.init(document.getElementById('chart1'));
@@ -64,4 +110,53 @@
                                 });
         });
     </script>
+
+    <!--日历控件-->
+    <script>
+        new Vue({
+            el:"#time",
+            data:{
+                value1: '',
+            },
+            methods:{
+                handleTime(time){
+                    var  params = {
+                        start:time[0],
+                        end:time[1]
+                    };
+
+                    axios.post("/report/getMemberReportDefined.do",params).then((res)=>{
+                        myChart1.setOption(
+                            {
+                                title: {
+                                    text: '会员数量'
+                                },
+                                tooltip: {},
+                                legend: {
+                                    data:['会员数量']
+                                },
+                                xAxis: {
+                                    data: res.data.data.months
+                                },
+                                yAxis: {
+                                    type:'value'
+                                },
+                                series: [{
+                                    name: '会员数量',
+                                    type: 'line',
+                                    data: res.data.data.memberCount
+                                }]
+                            });
+                    });
+                },
+
+            },
+           created(){
+               //加载页面的时候 默认查询当前月往前一年的
+
+           }
+
+        })
+    </script>
+
 </html>

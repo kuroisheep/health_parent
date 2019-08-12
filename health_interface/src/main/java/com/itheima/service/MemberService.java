@@ -1,6 +1,7 @@
 package com.itheima.service;
 
 import com.itheima.pojo.Member;
+import com.itheima.pojo.Time;
 
 import java.util.Map;
 
@@ -22,4 +23,8 @@ public interface MemberService {
      * @return
      */
     Map getMemberReport();
+
+
+    //根据区间时间获取会员折线图数据
+    Map getMemberReportDefined(String start,String end);
 }

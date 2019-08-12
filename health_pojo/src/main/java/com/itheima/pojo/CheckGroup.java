@@ -79,4 +79,5 @@ public class CheckGroup implements Serializable {
     public void setAttention(String attention) {
         this.attention = attention;
     }
+
 }

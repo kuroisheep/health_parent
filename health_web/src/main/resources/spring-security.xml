@@ -23,6 +23,7 @@
     <security:http pattern="/js/**" security="none"/>
     <security:http pattern="/plugins/**" security="none"/>
     <security:http pattern="/template/**" security="none"/>
+    <security:http pattern="/demo/**" security="none"/>
     <!--登录页面-->
     <security:http pattern="/login.html" security="none"/>
     <!--拦截规则配置-->

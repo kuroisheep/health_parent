@@ -3,27 +3,26 @@ package com.itheima.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.Result;
+import com.itheima.pojo.Time;
 import com.itheima.service.MemberService;
 import com.itheima.service.ReportService;
 import com.itheima.service.SetmealService;
+import com.itheima.utils.DateUtils;
 import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  * 报表控制层
  */
@@ -37,11 +36,37 @@ public class ReportController {
     @Reference
     private SetmealService setmealService;
 
-
     ///专门报表的服务
     @Reference
     private ReportService reportService;
 
+
+    /**
+     *description:根据日期区间时间 会员数量折线图
+     * @param
+     * @return com.itheima.entity.Result
+     */
+    @RequestMapping(value = "/getMemberReportDefined",method = RequestMethod.POST)
+    public Result getMemberReportDefined(@RequestBody Time time) throws Exception {
+
+        String start = DateUtils.parseDate2String(time.getStart());
+        String end = DateUtils.parseDate2String(time.getEnd());
+
+        Map map = null;
+        try {
+            map = memberService.getMemberReportDefined(start, end);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.GET_MEMBER_NUMBER_REPORT_FAIL);
+        }
+        return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS,map);
+    }
+
+    /**
+     *description:默认查询当前月往前12月 会员数量折线图
+     * @param
+     * @return com.itheima.entity.Result
+     */
     @RequestMapping(value = "/getMemberReport",method = RequestMethod.GET)
     public Result getMemberReport(){
         //调用服务得到Map
