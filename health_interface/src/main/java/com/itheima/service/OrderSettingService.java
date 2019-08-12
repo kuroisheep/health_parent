@@ -29,4 +29,6 @@ public interface OrderSettingService {
      * @param number
      */
     void editNumberByDate(Date orderDate, int number);
+
+    void deleteOrderSetting() throws Exception;
 }

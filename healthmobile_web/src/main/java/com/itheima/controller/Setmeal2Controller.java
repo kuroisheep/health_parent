@@ -26,8 +26,8 @@ public class Setmeal2Controller {
      */
     @RequestMapping(value = "/getSetmeal",method = RequestMethod.POST)
     public Result getSetmeal(){
-        List<Setmeal> list = setmealService.findAll();
-        return new Result(true, MessageConstant.QUERY_SETMEALLIST_SUCCESS,list);
+        List<Setmeal> setmeals = setmealService.findAll();
+        return new Result(true, MessageConstant.QUERY_SETMEALLIST_SUCCESS,setmeals);
     }
 
     /**
@@ -36,7 +36,10 @@ public class Setmeal2Controller {
      */
     @RequestMapping(value = "/findById",method = RequestMethod.POST)
     public Result findById(Integer id){
-       Setmeal setmeal = setmealService.findById(id);
+
+        Setmeal setmeal = setmealService.findById(id);
+
         return new Result(true, MessageConstant.QUERY_SETMEALLIST_SUCCESS,setmeal);
+
     }
 }

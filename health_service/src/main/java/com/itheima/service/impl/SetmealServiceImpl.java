@@ -1,19 +1,19 @@
 package com.itheima.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.itheima.constant.MessageConstant;
-import com.itheima.dao.CheckGroupDao;
 import com.itheima.dao.SetmealDao;
 import com.itheima.entity.PageResult;
 import com.itheima.entity.Result;
-import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Setmeal;
-import com.itheima.service.CheckGroupService;
 import com.itheima.service.SetmealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +26,9 @@ import java.util.Map;
 @Transactional
 public class SetmealServiceImpl implements SetmealService {
 
+
+    @Autowired
+    private JedisPool jedisPool;
 
     @Autowired
     private SetmealDao setmealDao;
@@ -58,15 +61,25 @@ public class SetmealServiceImpl implements SetmealService {
      * @return
      */
     @Override
-    public List<Setmeal> findAll() {
-        return setmealDao.findAll();
+    public synchronized List<Setmeal> findAll() {
+        Jedis resource = jedisPool.getResource();
+        String setmealList = resource.get("setmealList");
+        if (setmealList == null) {
+            List<Setmeal> setmeals = setmealDao.findAll();
+            setmealList = JSON.toJSONString(setmeals);
+            //存入redis
+            resource.set("setmealList", setmealList);
+        }
+        List<Setmeal> setmeals = JSON.parseArray(setmealList, Setmeal.class);
+        return setmeals;
+
     }
     /**
      * 根据套餐id查询（套餐数据+检查组数据+检查项数据）
      *
      */
     @Override
-    public Setmeal findById(Integer id) {
+    public synchronized Setmeal findById(Integer id) {
         //方式一：代码方式
         //1.根据套餐id查询套餐数据
         //2.根据套餐id查询中间表检查组ids
@@ -78,7 +91,20 @@ public class SetmealServiceImpl implements SetmealService {
 
         //方式二：通过映射文件配置方式来实现多对多的查询（目前推荐此方式）
 
-        return setmealDao.findById(id);
+        //获取数据
+        //获取jdesi对象
+        Jedis resource = jedisPool.getResource();
+        String setmealDetail = resource.get("setmeal_" + id);
+        if (setmealDetail == null) {
+            Setmeal setmeal = setmealDao.findById(id);
+            setmealDetail = JSON.toJSONString(setmeal);
+            //存入redis
+            resource.set("setmeal_" + id, setmealDetail);
+        }
+        //
+        Setmeal setmeal = JSON.parseObject(setmealDetail,Setmeal.class);
+        return setmeal;
+
     }
 
     /**
@@ -103,4 +129,5 @@ public class SetmealServiceImpl implements SetmealService {
             }
         }
     }
+
 }
