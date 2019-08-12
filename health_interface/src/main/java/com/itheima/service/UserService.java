@@ -8,8 +8,10 @@ import com.itheima.pojo.User;
 public interface UserService {
     /**
      * 根据用户名查询用户对象
-     * @param username
+     * @param name
      * @return
      */
-    User findUserByUsername(String username);
+    User findUserByUsername(String name);
+
+
 }

@@ -59,11 +59,11 @@
                         <el-submenu v-for="menu in menuList" :index="menu.path">
                             <template slot="title">
                                 <i class="fa" :class="menu.icon"></i>
-                                {{menu.title}}
+                                {{menu.name}}
                             </template>
                             <template v-for="child in menu.children">
                                 <el-menu-item :index="child.path">
-                                    <a :href="child.linkUrl" target="right">{{child.title}}</a>
+                                    <a :href="child.linkUrl" target="right">{{child.name}}</a>
                                 </el-menu-item>
                             </template>
                         </el-submenu>
@@ -190,16 +190,54 @@
                             "title": "运营数据统计",
                             "linkUrl":"report_business.html",
                             "children":[]
+                        },
+                        {
+                            "path": "6",     //菜单项所对应的路由路径
+                            "title": "系统设置",     //菜单项名称
+                            "icon":"fa-heartbeat",
+                            "children":[]//是否有子菜单，若没有，则为[]
                         }
                     ]
-                }
+                },
+
             ]
         },
         //通过钩子函数 发送请求从框架上下文对象中获取用户名信息
         created() {
-            axios.post("/user/getUsername.do").then(res=>{
+
+            this.getUsername()
+            /*axios.post("/user/getUsername.do").then(res=>{
                     this.username = res.data.data;//第二个data:用户名 第一个data:固定的获取返回数据
-            })
+            })*/
+        },
+        methods:{
+            getUsername(){
+                axios.post('/user/getUsername.do').then(res=>{
+                    if(res.data.flag){
+                        this.username = res.data.data;
+                        this.getUserMenuByUsername();
+                    }else{
+                        this.$message.error("返回错误")
+                    }
+                }).catch( err=>{
+                    this.$message.error("请求错误")
+                })
+            },
+            getUserMenuByUsername(){
+                axios.post(`/user/getUserMenuByUsername.do?name=${this.username}`).then(res=>{
+                        if(res.data.flag){
+                            this.menuList = res.data.data
+                        }else{
+                            this.$message.error(res.data.message)
+                        }
+                    })
+                    .catch(err=>{
+                        this.$message.error('网络请求发生错误,请稍后重试')
+                    })
+                },
+            logout(){
+                window.location.href = "../logout.do"
+            }
         }
     });
     $(function() {
