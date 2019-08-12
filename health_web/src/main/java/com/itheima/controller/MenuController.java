@@ -4,11 +4,10 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.QueryPageBean;
 import com.itheima.entity.Result;
-import com.itheima.pojo.CheckItem;
-import com.itheima.service.CheckItemService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.itheima.pojo.Menu;
+import com.itheima.pojo.Permission;
+import com.itheima.service.MenuService;
+import com.itheima.service.PermissionService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,30 +16,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 检查项控制层管理
+ * 权限控制层管理
  */
 @RestController
-@RequestMapping("/checkitem")
-public class CheckItemController {
-    //日志对象
-    private Logger logger = LoggerFactory.getLogger(CheckItemController.class);
+@RequestMapping("/menu")
+public class MenuController {
 
     @Reference
-    private CheckItemService checkItemService;
+    private MenuService menuService;
 
     /**
      * 新增检查项
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
-    public Result add(@RequestBody CheckItem checkItem){
+    public Result add(@RequestBody Menu menu){
         //调用service服务保存数据
         try {
-            checkItemService.add(checkItem);
-            return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
+
+            menuService.add(menu);
+            return new Result(true, MessageConstant.ADD_PERMISSION_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.ADD_CHECKITEM_FAIL);
+            return new Result(false, MessageConstant.ADD_MENU_FAIL);
         }
     }
 
@@ -52,13 +50,13 @@ public class CheckItemController {
     @RequestMapping(value = "/findPage",method = RequestMethod.POST)
     public Result findPage(@RequestBody QueryPageBean queryPageBean){
         try {
-            Result result = checkItemService.findPage(queryPageBean.getQueryString(),queryPageBean.getCurrentPage(),queryPageBean.getPageSize());
+            Result result = menuService.findPage(queryPageBean.getQueryString(),queryPageBean.getCurrentPage(),queryPageBean.getPageSize());
+
             return result;
         } catch (Exception e) {
-            //e.printStackTrace();
-            logger.error(e.getMessage());
+            e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.QUERY_MENU_FAIL,e.getMessage());
         }
     }
 
@@ -70,12 +68,12 @@ public class CheckItemController {
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public Result delete(Integer id){
         try {
-            checkItemService.deleteById(id);
-            return new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS);
+            menuService.deleteById(id);
+            return new Result(true, MessageConstant.DELETE_MENU_SUCCESS);
         } catch (RuntimeException e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.DELETE_MENU_FAIL,e.getMessage());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -92,13 +90,13 @@ public class CheckItemController {
     @RequestMapping(value = "/findById",method = RequestMethod.GET)
     public Result findById(Integer id){
         try {
-            CheckItem checkItem =  checkItemService.findById(id);
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS,checkItem);
+            Menu menu =  menuService.findById(id);
+            return new Result(true, MessageConstant.QUERY_MENU_SUCCESS,menu);
         }
         catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.QUERY_MENU_FAIL,e.getMessage());
         }
     }
 
@@ -108,15 +106,15 @@ public class CheckItemController {
      * @return
      */
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public Result edit(@RequestBody CheckItem checkItem){
+    public Result edit(@RequestBody Menu menu){
         try {
-            checkItemService.edit(checkItem);
-            return new Result(true, MessageConstant.EDIT_CHECKITEM_SUCCESS);
+            menuService.edit(menu);
+            return new Result(true, MessageConstant.EDIT_MENU_SUCCESS);
         }
         catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.EDIT_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.EDIT_MENU_FAIL,e.getMessage());
         }
     }
 
@@ -128,13 +126,13 @@ public class CheckItemController {
     @RequestMapping(value = "/findAll",method = RequestMethod.GET)
     public Result findAll(){
         try {
-            List<CheckItem> list = checkItemService.findAll();
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS,list);
+            List<Menu> list = menuService.findAll();
+            return new Result(true, MessageConstant.QUERY_MENU_SUCCESS,list);
         }
         catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.QUERY_MENU_FAIL,e.getMessage());
         }
     }
 }

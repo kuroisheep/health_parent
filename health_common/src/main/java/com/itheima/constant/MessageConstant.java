@@ -68,4 +68,51 @@ public class MessageConstant {
     public static final String GET_BUSINESS_REPORT_FAIL = "获取运营统计数据失败";
     public static final String GET_SETMEAL_LIST_SUCCESS = "查询套餐列表数据成功";
     public static final String GET_SETMEAL_LIST_FAIL = "查询套餐列表数据失败";
+
+
+    public static final String ADD_PERMISSION_SUCCESS = "新增权限成功";
+    public static final String ADD_PERMISSION_FAIL = "新增权限失败";
+    public static final String QUERY_PERMISSION_SUCCESS = "查询权限成功";
+    public static final String QUERY_PERMISSION_FAIL = "查询权限失败";
+    public static final String DELETE_PERMISSION_SUCCESS = "删除权限成功";
+    public static final String DELETE_PERMISSION_FAIL = "删除权限失败";
+    public static final String EDIT_PERMISSION_SUCCESS = "编辑权限成功";
+    public static final String EDIT_PERMISSION_FAIL = "编辑权限失败";
+
+    public static final String ADD_MENU_SUCCESS = "新增菜单成功";
+    public static final String ADD_MENU_FAIL = "新增菜单失败";
+    public static final String QUERY_MENU_SUCCESS = "查询菜单成功";
+    public static final String QUERY_MENU_FAIL = "查询菜单失败";
+    public static final String DELETE_MENU_SUCCESS = "删除菜单成功";
+    public static final String DELETE_MENU_FAIL = "删除菜单失败";
+    public static final String EDIT_MENU_SUCCESS = "编辑菜单成功";
+    public static final String EDIT_MENU_FAIL = "编辑菜单失败";
+
+
+    public static final String GET_SETMEAL_INQUIRE_ORLE_SUCCEED = "查询角色成功";
+    public static final String GET_SETMEAL_INQUIRE_ORLE_FAILURE = "查询角色失败";
+
+    public static final String QUERY_ORLE_SUCCESS = "查询权限成功";
+    public static final String QUERY_ORLE_FAILURE = "查询权限失败";
+
+    public static final String QUERY_MENU_ORLE_SUCCESS = "查询所有菜单成功";
+    public static final String QUERY_MENU_ORLE_FAILURE = "查询所有菜单失败";
+
+    public static final String QUERY_ORLE_NEWLY_INCREASED_SUCCESS = "新增角色成功";
+    public static final String QUERY_ORLE_NEWLY_INCREASED_FAILURE = "新增角色失败";
+
+
+
+    public static final String ADD_USER_SUCCESS = "新增用户成功";
+    public static final String ADD_USER_FAIL = "新增用户失败";
+    public static final String QUERY_USER_SUCCESS = "查询用户信息成功";
+    public static final String QUERY_USER_FAIL = "查询用户信息失败";
+    public static final String QUERY_ROLE_SUCCESS = "查询角色信息成功";
+    public static final String QUERY_ROLE_FAIL = "查询角色信息失败";
+    public static final String DELETE_USER_SUCCESS = "删除用户成功";
+    public static final String DELETE_USER_FAIL = "删除用户失败";
+    public static final String EDIT_USER_SUCCESS = "编辑用户成功";
+    public static final String EDIT_USER_FAIL = "编辑用户失败";
+
+
 }

@@ -1,42 +1,44 @@
 package com.itheima.controller;
-
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.QueryPageBean;
 import com.itheima.entity.Result;
-import com.itheima.pojo.CheckGroup;
-import com.itheima.service.CheckGroupService;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.itheima.pojo.User;
+import com.itheima.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * 检查组控制层管理
+ * @Author: TeFuir
+ * @Date: 2019/8/12 0:28
+ * @Description:
  */
 @RestController
-@RequestMapping("/checkgroup")
-public class CheckGroupController {
+@RequestMapping("/users")
+public class UsersController {
 
     @Reference
-    private CheckGroupService checkGroupService;
+    private UserService userService;
+
 
     /**
      * 新增检查组
-     * @param checkGroup  检查组对象
-     * @param checkitemIds  检查项ids
+     * @param roleIds  检查组对象
+     * @param user  检查项ids
      * @return  返回成功或失败
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
-    public Result add(@RequestBody CheckGroup checkGroup,@RequestParam List<Integer> checkitemIds){
+    public Result add(@RequestBody User user, @RequestParam List<Integer> roleIds){
         //控制层一般都是接收请求 和响应数据
         try {
-            checkGroupService.add(checkGroup,checkitemIds);
-            return  new Result(true, MessageConstant.ADD_CHECKGROUP_SUCCESS);
+
+
+            userService.add(user,roleIds);
+            return  new Result(true, MessageConstant.ADD_USER_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            return  new Result(false, MessageConstant.ADD_CHECKGROUP_FAIL);
+            return  new Result(false, MessageConstant.ADD_USER_FAIL);
         }
     }
 
@@ -48,12 +50,12 @@ public class CheckGroupController {
     @RequestMapping(value = "/findPage",method = RequestMethod.POST)
     public Result findPage(@RequestBody QueryPageBean queryPageBean){
         try {
-            Result result = checkGroupService.findPage(queryPageBean.getQueryString(),queryPageBean.getCurrentPage(),queryPageBean.getPageSize());
+            Result result = userService.findPage(queryPageBean.getQueryString(),queryPageBean.getCurrentPage(),queryPageBean.getPageSize());
             return result;
         } catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.QUERY_USER_FAIL,e.getMessage());
         }
     }
 
@@ -63,22 +65,25 @@ public class CheckGroupController {
     @RequestMapping(value = "/findById",method = RequestMethod.GET)
     public Result findById(Integer id){
         try {
-            CheckGroup checkGroup = checkGroupService.findById(id);
-            return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS,checkGroup);
+            com.itheima.pojo.User user = userService.findById(id);
+            System.out.println(user+"===============================");
+            return new Result(true, MessageConstant.QUERY_USER_SUCCESS,user);
         } catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL);
+            return new Result(false, MessageConstant.QUERY_USER_FAIL);
         }
     }
 
     /**
      * 根据检查组id查询检查项ids
+     * 成功失败提示未加
      */
     @RequestMapping(value = "/findCheckItemIdsByCheckGroupId",method = RequestMethod.GET)
     public Result findCheckItemIdsByCheckGroupId(Integer id){
         try {
-            List<Integer> list = checkGroupService.findCheckItemIdsByCheckGroupId(id);
+            List<Integer> list = userService.findCheckItemIdsByCheckGroupId(id);
+            System.out.println(list+"+++++++++++++++++++++++++++++++++++++++++++++++++++");
             return new Result(true, MessageConstant.QUERY_CHECKITEM_IDS_SUCCESS,list);
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,13 +95,13 @@ public class CheckGroupController {
      * 编辑检查组 edit
      */
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public Result edit(Integer[] checkitemIds,@RequestBody CheckGroup checkGroup){
+    public Result edit(Integer[] roleIds,@RequestBody User user){
         try {
-            checkGroupService.edit(checkitemIds,checkGroup);
-            return new Result(true, MessageConstant.EDIT_CHECKGROUP_SUCCESS);
+            userService.edit(roleIds,user);
+            return new Result(true, MessageConstant.EDIT_USER_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false, MessageConstant.EDIT_CHECKGROUP_FAIL);
+            return new Result(false, MessageConstant.EDIT_USER_FAIL);
         }
     }
 
@@ -106,12 +111,23 @@ public class CheckGroupController {
     @RequestMapping(value = "/findAll",method = RequestMethod.GET)
     public Result findAll(){
         try {
-            List<CheckGroup> checkGroupList = checkGroupService.findAll();
-            return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS,checkGroupList);
+            List<com.itheima.pojo.User> userList = userService.findAll();
+            return new Result(true, MessageConstant.QUERY_USER_SUCCESS,userList);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL);
+            return new Result(false, MessageConstant.QUERY_USER_FAIL);
         }
     }
 
+    //根据id删除检查组
+    @RequestMapping("/delete")
+    public Result deleteGroupById(Integer id){
+        try {
+            userService.deleteGroupById(id);
+            return new Result(true,MessageConstant.DELETE_USER_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.DELETE_USER_FAIL);
+        }
+    }
 }

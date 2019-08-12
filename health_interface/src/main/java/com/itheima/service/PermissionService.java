@@ -1,24 +1,16 @@
-package com.itheima.dao;
+package com.itheima.service;
 
-import com.github.pagehelper.Page;
+import com.itheima.entity.Result;
 import com.itheima.pojo.CheckItem;
 import com.itheima.pojo.Permission;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
-import java.util.Set;
 
 /**
- * 权限接口
+ * 业务处理层 服务接口
  */
-public interface PermissionDao {
-    /**
-     * 根据角色id查询权限列表
-     * @param roleId
-     * @return
-     */
-    Set<Permission> findPermissionByRoleId(Integer roleId);
-
-
+public interface PermissionService {
     /**
      * 新增检查项
      * @param permission
@@ -26,23 +18,18 @@ public interface PermissionDao {
     void add(Permission permission);
 
     /**
-     * 根据条件 查询分页数据
+     * 分页查询
      * @param queryString
+     * @param currentPage
+     * @param pageSize
      * @return
      */
-    Page<Permission> selectByCondition(String queryString);
+    Result findPage(String queryString, Integer currentPage, Integer pageSize);
     /**
      * 检查项删除
      * @return
      */
     void deleteById(Integer id);
-
-    /**
-     * 根据检查项id查询中间表数据
-     * @param itemId
-     * @return
-     */
-    int findCountByCheckItemId(Integer itemId);
     /**
      * 根据检查项id查询检查项数据
      * @return

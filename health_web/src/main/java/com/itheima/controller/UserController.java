@@ -36,7 +36,6 @@ public class UserController {
         return new Result(true, MessageConstant.GET_USERNAME_SUCCESS,user.getUsername());
     }
 
-
     /**
      * 获取用户权限菜单
      * @param name
@@ -60,5 +59,4 @@ public class UserController {
         }
 
     }
-
 }

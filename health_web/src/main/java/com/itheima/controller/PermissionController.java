@@ -5,10 +5,11 @@ import com.itheima.constant.MessageConstant;
 import com.itheima.entity.QueryPageBean;
 import com.itheima.entity.Result;
 import com.itheima.pojo.CheckItem;
+import com.itheima.pojo.Permission;
 import com.itheima.service.CheckItemService;
+import com.itheima.service.PermissionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,30 +18,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 检查项控制层管理
+ * 权限控制层管理
  */
 @RestController
-@RequestMapping("/checkitem")
-public class CheckItemController {
-    //日志对象
-    private Logger logger = LoggerFactory.getLogger(CheckItemController.class);
+@RequestMapping("/permission")
+public class PermissionController {
 
     @Reference
-    private CheckItemService checkItemService;
+    private PermissionService permissionService;
 
     /**
      * 新增检查项
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
-    public Result add(@RequestBody CheckItem checkItem){
+    public Result add(@RequestBody Permission permission){
         //调用service服务保存数据
         try {
-            checkItemService.add(checkItem);
-            return new Result(true, MessageConstant.ADD_CHECKITEM_SUCCESS);
+            System.out.println("接受到了请求==========================="+permission);
+            permissionService.add(permission);
+            return new Result(true, MessageConstant.ADD_PERMISSION_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.ADD_CHECKITEM_FAIL);
+            return new Result(false, MessageConstant.ADD_PERMISSION_FAIL);
         }
     }
 
@@ -52,13 +52,13 @@ public class CheckItemController {
     @RequestMapping(value = "/findPage",method = RequestMethod.POST)
     public Result findPage(@RequestBody QueryPageBean queryPageBean){
         try {
-            Result result = checkItemService.findPage(queryPageBean.getQueryString(),queryPageBean.getCurrentPage(),queryPageBean.getPageSize());
+            Result result = permissionService.findPage(queryPageBean.getQueryString(),queryPageBean.getCurrentPage(),queryPageBean.getPageSize());
+
             return result;
         } catch (Exception e) {
-            //e.printStackTrace();
-            logger.error(e.getMessage());
+            e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.QUERY_PERMISSION_FAIL,e.getMessage());
         }
     }
 
@@ -70,17 +70,17 @@ public class CheckItemController {
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public Result delete(Integer id){
         try {
-            checkItemService.deleteById(id);
-            return new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS);
+            permissionService.deleteById(id);
+            return new Result(true, MessageConstant.DELETE_PERMISSION_SUCCESS);
         } catch (RuntimeException e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.DELETE_PERMISSION_FAIL,e.getMessage());
         }
         catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.DELETE_PERMISSION_FAIL,e.getMessage());
         }
     }
 
@@ -92,13 +92,13 @@ public class CheckItemController {
     @RequestMapping(value = "/findById",method = RequestMethod.GET)
     public Result findById(Integer id){
         try {
-            CheckItem checkItem =  checkItemService.findById(id);
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS,checkItem);
+            Permission permission =  permissionService.findById(id);
+            return new Result(true, MessageConstant.QUERY_PERMISSION_SUCCESS,permission);
         }
         catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.QUERY_PERMISSION_FAIL,e.getMessage());
         }
     }
 
@@ -108,15 +108,15 @@ public class CheckItemController {
      * @return
      */
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public Result edit(@RequestBody CheckItem checkItem){
+    public Result edit(@RequestBody Permission permission){
         try {
-            checkItemService.edit(checkItem);
-            return new Result(true, MessageConstant.EDIT_CHECKITEM_SUCCESS);
+            permissionService.edit(permission);
+            return new Result(true, MessageConstant.EDIT_PERMISSION_SUCCESS);
         }
         catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.EDIT_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.EDIT_PERMISSION_FAIL,e.getMessage());
         }
     }
 
@@ -128,13 +128,13 @@ public class CheckItemController {
     @RequestMapping(value = "/findAll",method = RequestMethod.GET)
     public Result findAll(){
         try {
-            List<CheckItem> list = checkItemService.findAll();
-            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS,list);
+            List<Permission> list = permissionService.findAll();
+            return new Result(true, MessageConstant.QUERY_PERMISSION_SUCCESS,list);
         }
         catch (Exception e) {
             e.printStackTrace();
             //失败
-            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL,e.getMessage());
+            return new Result(false, MessageConstant.QUERY_PERMISSION_FAIL,e.getMessage());
         }
     }
 }
