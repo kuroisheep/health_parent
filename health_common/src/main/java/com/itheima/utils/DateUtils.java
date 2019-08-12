@@ -293,4 +293,10 @@ public class DateUtils {
             e.printStackTrace();
         }
     }
+    //获取xx年前的时间
+    public static Date getYearDay(int year){
+        Calendar calendar=Calendar.getInstance();
+        calendar.add(Calendar.YEAR,-year);
+        return calendar.getTime();
+    }
 }

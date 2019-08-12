@@ -90,5 +90,69 @@ public class MemberServiceImpl implements MemberService {
             return null;
         }
     }
+    /**
+     * 查询会员性别饼形图
+     * @return
+     */
+    @Override
+    public List<Map> findSex() {
+        return memberDao.findSex();
+    }
+
+    /**
+     * 查询各年龄阶段的会员数量
+     * @return
+     */
+    @Override
+    public Map getMemberAgeReport() {
+        Map rsMap=new HashMap();
+        //设置日期集合，用于封装日期集合
+        Map dateMap=new HashMap();
+        //各年龄阶段表；分别为[0-18,18-30,30-45,45以上]
+        List<String>ageNames=new ArrayList<>();
+        ageNames.add("0-18");
+        ageNames.add("18-30");
+        ageNames.add("30-45");
+        ageNames.add("45以上");
+        rsMap.put("ageNames",ageNames);
+        //各年龄阶段数量；
+        List<Map>ageCount=new ArrayList<>();
+        //获取0-18
+        Map map1=new HashMap();
+        dateMap.put("yearDate0",DateUtils.getYearDay(0));
+        dateMap.put("yearDate1",DateUtils.getYearDay(18));
+        int ageCount1=memberDao.findAgeCount(dateMap);
+        map1.put("value",ageCount1);
+        map1.put("name","0-18");
+        ageCount.add(map1);
+        //获取18-30
+        Map map2=new HashMap();
+        dateMap.put("yearDate0",DateUtils.getYearDay(18));
+        dateMap.put("yearDate1",DateUtils.getYearDay(30));
+        int ageCount2=memberDao.findAgeCount(dateMap);
+        map2.put("value",ageCount2);
+        map2.put("name","18-30");
+        ageCount.add(map2);
+        //获取30-45
+        Map map3=new HashMap();
+        dateMap.put("yearDate0",DateUtils.getYearDay(30));
+        dateMap.put("yearDate1",DateUtils.getYearDay(45));
+        int ageCount3=memberDao.findAgeCount(dateMap);
+        map3.put("value",ageCount3);
+        map3.put("name","30-45");
+        ageCount.add(map3);
+        //获取45以上
+        Map map4=new HashMap();
+        dateMap.put("yearDate0",DateUtils.getYearDay(45));
+        dateMap.put("yearDate1",DateUtils.getYearDay(1000));
+        int ageCount4=memberDao.findAgeCount(dateMap);
+        map4.put("value",ageCount4);
+        map4.put("name","45以上");
+        ageCount.add(map4);
+        //封装各年龄阶段数量
+        rsMap.put("ageCount",ageCount);
+        return rsMap;
+    }
+
 
 }

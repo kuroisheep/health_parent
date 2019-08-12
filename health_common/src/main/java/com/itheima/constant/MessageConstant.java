@@ -113,6 +113,9 @@ public class MessageConstant {
     public static final String DELETE_USER_FAIL = "删除用户失败";
     public static final String EDIT_USER_SUCCESS = "编辑用户成功";
     public static final String EDIT_USER_FAIL = "编辑用户失败";
-
+    public static final String GET_SEX_LIST_SUCCESS = "查询性别列表数据成功";
+    public static final String GET_SEX_LIST_FALL = "查询性别列表数据失败";
+    public static final String GET_AGE_LIST_SUCCESS = "查询年龄列表数据失败";
+    public static final String GET_AGE_LIST_FALL = "查询年龄列表数据失败";
 
 }

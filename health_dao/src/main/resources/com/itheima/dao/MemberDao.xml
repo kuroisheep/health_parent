@@ -95,4 +95,13 @@
     <select id="findMemberTotalCount" resultType="int">
         select count(id) from t_member
     </select>
+    <!--查询会员性别人数-->
+    <select id="findSex" resultType="map">
+        SELECT COUNT(*) value,IFNULL(sex,0) name FROM t_member   GROUP BY sex
+    </select>
+
+    <!--查询会员某个年龄阶段人数-->
+    <select id="findAgeCount" parameterType="map" resultType="int">
+        SELECT count(*) FROM t_member WHERE birthday BETWEEN  #{yearDate1} AND #{yearDate0}
+    </select>
 </mapper>

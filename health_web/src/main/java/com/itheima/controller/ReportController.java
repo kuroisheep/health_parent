@@ -242,4 +242,56 @@ public class ReportController {
         }
     }
 
+    /**
+     * 查询男女性别饼形图
+     * @return
+     */
+    @RequestMapping("/getMemberSexReport")
+    public Result getMemberSexReport(){
+        List<Map>sexlist=memberService.findSex();
+//        设置结果集合
+        Map rsMap=new HashMap();
+        //1.查询出所有性别的名称
+        List<String>sexNameList=new ArrayList<>();
+        //2.查询出所有性别的人数
+        List<Map>sexCountList=new ArrayList<>();
+
+        for (Map map : sexlist) {
+            String name = (String) map.get("name");
+            long value = (long) map.get("value");
+            if (name.equals("1")){
+                sexNameList.add("男");
+                Map menMap=new HashMap();
+                menMap.put("value",value);
+                menMap.put("name","男");
+                sexCountList.add(menMap);
+            }
+            else if (name.equals("2")){
+                sexNameList.add("女");
+                Map womenMap=new HashMap();
+                womenMap.put("value",value);
+                womenMap.put("name","女");
+                sexCountList.add(womenMap);
+            }
+            else {
+                sexNameList.add("保密");
+                Map secretMap=new HashMap();
+                secretMap.put("value",value);
+                secretMap.put("name","保密");
+                sexCountList.add(secretMap);
+
+            }
+        }
+        rsMap.put("sexNames",sexNameList);
+        rsMap.put("sexCount",sexCountList);
+        return new Result(true,MessageConstant.GET_SEX_LIST_SUCCESS,rsMap);
+    }
+    //会员年龄比例饼形图
+    @RequestMapping("/getMemberAgeReport")
+    public Result getMemberAgeReport(){
+        Map rsMap=memberService.getMemberAgeReport();
+        return new Result(true,MessageConstant.GET_AGE_LIST_SUCCESS,rsMap);
+    }
+
+
 }
