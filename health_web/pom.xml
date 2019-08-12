@@ -27,6 +27,12 @@
             <artifactId>jxls-core</artifactId>
             <version>1.0.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.itheima</groupId>
+            <artifactId>health_pojo</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

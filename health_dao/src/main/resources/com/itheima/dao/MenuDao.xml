@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.MenuDao" >
+    <select id="findMenusByRoleId" parameterType="Integer" resultType="com.itheima.pojo.Menu">
+        SELECT m.*
+        FROM t_role_menu rm, t_menu m
+        WHERE rm.role_id = #{roleID} AND rm.menu_id = m.id AND m.level = 1
+        ORDER BY m.id
+    </select>
+
+    <select id="findMenusByMenuId" parameterType="Integer" resultType="com.itheima.pojo.Menu">
+        SELECT m.*
+        FROM t_role_menu rm, t_menu m
+        WHERE rm.role_id = #{roleId} and rm.menu_id = m.id and m.level = 2 and m.parentMenuId = #{parentMenuId}
+    </select>
+
+</mapper>
