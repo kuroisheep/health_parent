@@ -77,7 +77,8 @@
         <!-- 指定触发的时间，基于Cron表达式 每个月的最后一天的23点59分执行-->
         <property name="cronExpression">
             <!--测试 一分钟后执行的Cron表达式：0 */1 * * * ?-->
-            <value>0 59 23 L * ?</value>
+            <!--0 59 23 L * ?-->
+            <value>0 0 15 * * ?</value>
         </property>
     </bean>
 
