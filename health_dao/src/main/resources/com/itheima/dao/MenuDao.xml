@@ -15,4 +15,71 @@
         WHERE rm.role_id = #{roleId} and rm.menu_id = m.id and m.level = 2 and m.parentMenuId = #{parentMenuId}
     </select>
 
+    <!--新增检查项
+   快捷键：control+alt+shift+ 双击name
+   -->
+    <insert id="add" parameterType="com.itheima.pojo.Menu">
+        insert into t_menu (name,linkUrl,path,priority,description,icon,parentMenuId,level)
+        values(#{name},#{linkUrl},#{path},#{priority},#{description},#{icon},#{parentMenuId},#{level})
+    </insert>
+
+    <!--分页查询-->
+    <select id="selectByCondition" parameterType="string" resultType="com.itheima.pojo.Menu">
+        select * from t_menu
+        <if test="value !=null and value.length >0">
+            where name = #{value}
+        </if>
+    </select>
+
+    <!--检查项删除-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_menu where id = #{id}
+    </delete>
+
+    <!--根据检查项id查询中间表数据-->
+    <select id="findCountByCheckItemId" parameterType="int" resultType="int">
+        select count(*) from t_role_menu where menu_id = #{id}
+    </select>
+
+    <!--根据检查项id查询检查项数据-->
+    <select id="findById" parameterType="int" resultType="com.itheima.pojo.Menu">
+        select * from t_menu where id = #{id}
+    </select>
+
+    <!--编辑检查项数据-->
+    <update id="edit" parameterType="com.itheima.pojo.Menu">
+        update t_menu
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="linkUrl != null">
+                linkUrl = #{linkUrl},
+            </if>
+            <if test="path != null">
+                path = #{path},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="icon != null">
+                icon = #{icon},
+            </if>
+            <if test="parentMenuId != null">
+                parentMenuId = #{parentMenuId},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--查询所有检查项-->
+    <select id="findAll"  resultType="com.itheima.pojo.Menu">
+        select * from t_menu
+    </select>
 </mapper>

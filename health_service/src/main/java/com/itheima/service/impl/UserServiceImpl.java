@@ -4,9 +4,11 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.itheima.constant.MessageConstant;
+import com.itheima.dao.MenuDao;
 import com.itheima.dao.PermissionDao;
 import com.itheima.dao.RoleDao;
 import com.itheima.dao.UserDao;
+import com.itheima.entity.PageResult;
 import com.itheima.entity.Result;
 import com.itheima.pojo.Menu;
 import com.itheima.pojo.Permission;
@@ -33,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PermissionDao permissionDao;
+
+    @Autowired
+    private MenuDao menuDao;
 
     /**
      * 查询用户对象（角色+权限数据）
