@@ -88,7 +88,7 @@
     <!--extends-->
     <resultMap id="findByIdResultMap" type="com.itheima.pojo.CheckGroup" extends="baseResultMap">
         <!--查询检查项数据-->
-        <collection property="checkItems"
+        <collection property="role"
                     select="com.itheima.dao.CheckItemDao.findCheckItemById" column="id"/>
     </resultMap>
 

@@ -6,4 +6,120 @@
     <select id="findUserByUsername" parameterType="string" resultType="com.itheima.pojo.User">
         select * from t_user where username = #{username}
     </select>
+
+
+    <!--新增检查组-->
+    <insert id="add" parameterType="com.itheima.pojo.User" useGeneratedKeys="true" keyProperty="id">
+        /*获取id   order:AFTER插入检查组后查询主键id值  keyProperty将查询后的id值设置到此对象属性中   */
+        <!--<selectKey order="AFTER" keyProperty="id" resultType="int">-->
+            <!--select LAST_INSERT_ID()-->
+        <!--</selectKey>-->
+        insert into t_user (birthday,gender,username,password,remark,station,telephone)
+        values(#{birthday},#{gender},#{username},#{password},#{remark},#{station},#{telephone})
+    </insert>
+
+    <!--通过检查组往中间表插入数据-->
+    <insert id="setCheckGroupAndCheckItem" parameterType="java.util.Map">
+        insert into t_user_role (user_id,role_id)
+        values(#{userId},#{roleId})
+</insert>
+
+    <!--分页查询-->
+    <select id="selectByCondition" parameterType="string" resultType="com.itheima.pojo.User">
+        select * from t_user
+        <if test="value !=null and value.length >0">
+            where username = #{value}
+        </if>
+    </select>
+    <!--根据检查组id查询检查组对象-->
+    <select id="findById" parameterType="Integer" resultType="com.itheima.pojo.User">
+        select * from t_user where id = #{id}
+    </select>
+
+    <!--根据检查组id查询检查项ids-->
+    <select id="findCheckItemIdsByCheckGroupId" parameterType="int" resultType="int">
+        select role_id  from t_user_role where user_id = #{id}
+    </select>
+
+
+
+    <!--编辑检查项数据-->
+    <update id="edit" parameterType="com.itheima.pojo.User">
+        update t_user
+        <set>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="station != null">
+                station = #{station},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--根据检查组id删除中间表关联数据-->
+    <delete id="deleteAssociation" parameterType="int">
+        delete from t_user_role where user_id = #{id}
+    </delete>
+
+    <!--查询所有检查组数据-->
+    <select id="findAll" resultType="com.itheima.pojo.Role">
+        select * from t_role
+    </select>
+
+
+    <!---多对多查询检查组+检查项-->
+    <resultMap id="baseResultMap" type="com.itheima.pojo.User">
+    <id column="id" property="id"/>
+    <result column="birthday" property="birthday"/>
+    <result column="gender" property="gender"/>
+    <result column="username" property="username"/>
+    <result column="password" property="password"/>
+    <result column="remark" property="remark"/>
+    <result column="station" property="station"/>
+    <result column="telephone" property="telephone"/>
+</resultMap>
+
+    <!--extends-->
+    <resultMap id="findByIdResultMap" type="com.itheima.pojo.User" extends="baseResultMap">
+        <!--查询检查项数据-->
+        <collection property="roles"
+                    select="com.itheima.dao.UserDao.findRole" column="id"/>
+    </resultMap>
+    <select id="findRole" resultType="com.itheima.pojo.Role">
+        select * FROM t_role
+    </select>
+
+
+    <!--条件是套餐id查询检查组数据-->
+    <select id="findCheckGroupById" parameterType="int" resultMap="findByIdResultMap">
+        select tu.* from t_user tu,t_user_role tur where tc.id = tur.user_id
+        and tur.role_id = #{id}
+    </select>
+
+
+    <!--根据检查组id删除关联表中的信息-->
+    <delete id="deleteByGroupId" parameterType="int">
+        delete from t_user_role where user_id = #{id}
+    </delete>
+
+    <!--根据id删除检查组-->
+    <delete id="deleteGroupById" parameterType="int">
+        delete from t_user   where id = #{id}
+    </delete>
 </mapper>

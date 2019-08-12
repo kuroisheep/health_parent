@@ -50,7 +50,6 @@ public class CheckItemController {
      * @return
      */
     @RequestMapping(value = "/findPage",method = RequestMethod.POST)
-    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')") //当前用户访问findPage需要CHECKITEM_QUERY权限
     public Result findPage(@RequestBody QueryPageBean queryPageBean){
         try {
             //error  warn info debug
@@ -80,7 +79,6 @@ public class CheckItemController {
      * @return
      */
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
     public Result delete(Integer id){
         try {
             checkItemService.deleteById(id);

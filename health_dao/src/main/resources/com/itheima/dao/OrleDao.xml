@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--遵循规范：
+    映射文件的文件名要与接口名一致
+    映射文件的路径要与接口的路径一致
+    namesapce: 接口的全限定名
+-->
+<mapper namespace="com.itheima.dao.OrleDao">
+    <!--
+        id: 与接口中的方法名一致
+        parameterType: 传入的参数类型
+        resultType: 传出的参数类型
+    -->
+    <select id="findAll" parameterType="String" resultType="com.itheima.pojo.Role">
+        <!--sql语句-->
+        select * from t_role
+    </select>
+
+    <!--查询所有权限-->
+    <select id="findAllJurisDiction" resultType="com.itheima.pojo.Permission">
+        select * from t_permission
+    </select>
+
+    <!--查询所有菜单-->
+    <select id="findAllmenu" resultType="com.itheima.pojo.Menu">
+        select * from t_menu
+    </select>
+
+</mapper>
