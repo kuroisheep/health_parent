@@ -53,17 +53,6 @@ public class CheckItemController {
     @PreAuthorize("hasAuthority('CHECKITEM_QUERY')") //当前用户访问findPage需要CHECKITEM_QUERY权限
     public Result findPage(@RequestBody QueryPageBean queryPageBean){
         try {
-            //error  warn info debug
-            logger.info("**********************************info**********************************");
-            logger.error("**********************************error**********************************");
-            logger.warn("**********************************warn**********************************");
-            logger.debug("**********************************debug**********************************");
-            logger.trace("**********************************trace**********************************");
-            //info:一般输入输出
-            //error:异常的时候
-            //warn:业务警告
-            //debug:开发阶段 需要输出数据的地方打印
-            //trace最详细的 了解即可
             Result result = checkItemService.findPage(queryPageBean.getQueryString(),queryPageBean.getCurrentPage(),queryPageBean.getPageSize());
             return result;
         } catch (Exception e) {
