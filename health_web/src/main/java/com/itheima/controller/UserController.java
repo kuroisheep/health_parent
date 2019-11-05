@@ -6,6 +6,7 @@ import com.itheima.entity.Result;
 import com.itheima.pojo.Menu;
 import com.itheima.pojo.Role;
 import com.itheima.service.UserService;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +61,6 @@ public class UserController {
         }
 
     }
+
 
 }
