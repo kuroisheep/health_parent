@@ -46,7 +46,7 @@
         <ezmorph.version>1.0.6</ezmorph.version>
         <json-lib.version>2.4</json-lib.version>
         <!--权限框架-->
-        <spring.security.version>5.0.5.RELEASE</spring.security.version>
+        <spring.security.version>5.2.10.RELEASE</spring.security.version>
         <!--操作offfice 一般操作excel-->
         <poi.version>3.14</poi.version>
         <jedis.version>2.7.0</jedis.version>
